@@ -149,8 +149,11 @@ void GLWidget::paintGL()
 
    // A modificar si cal girar tots els objectes
    if (esc->taulaBillar!=NULL) {
-       esc->taulaBillar->aplicaTGCentrat(transform);
-       esc->draw();
+       esc->taulaBillar->aplicaTGCentrat(transform);      
+
+   if (esc->pla!=NULL)
+       esc->pla->aplicaTGCentrat(transform);
+   esc->draw();
    }
 }
 
@@ -237,7 +240,8 @@ void GLWidget::newPlaBase()
     // Metode que crea un objecte PlaBase poligon amb el punt central al (0,0,0) i perpendicular a Y=0
 
     // Metode a implementar
-
+    Pla* obj = new Pla();
+    newObjecte(obj);
 }
 
 void GLWidget::newObj(QString fichero)

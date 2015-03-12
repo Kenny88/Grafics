@@ -42,7 +42,7 @@ protected:
     point4 *points;
     color4 *colors;
     int Index; // index de control del numero de vertexs a posar a la GPU
-
+    GLint drawMode;
 
 public:
 

@@ -81,6 +81,8 @@ void Objecte::aplicaTGPoints(mat4 m)
 void Objecte::aplicaTGCentrat(mat4 m)
 {
     // Metode a implementar
+    aplicaTGPoints(m);
+    aplicaTG(m);
 }
 
 void Objecte::toGPU(QGLShaderProgram *pr){
