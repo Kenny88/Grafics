@@ -1,5 +1,4 @@
 
-
 #include <math.h>
 
 #include <glwidget.h>
@@ -97,7 +96,7 @@ void GLWidget::setXRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != xRot) {
-        xRot = angle;
+        xRot += (angle-xRot)/150;
         update();
     }
 }
@@ -107,7 +106,7 @@ void GLWidget::setYRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != yRot) {
-        yRot = angle;
+        yRot += (angle-yRot)/150;;
         update();
     }
 }
@@ -116,7 +115,7 @@ void GLWidget::setZRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != zRot) {
-        zRot = angle;
+        zRot += (angle-zRot)/150;;
         update();
     }
 }
@@ -148,13 +147,14 @@ void GLWidget::paintGL()
                        RotateZ( zRot / 16.0 ) );
 
    // A modificar si cal girar tots els objectes
-   if (esc->taulaBillar!=NULL) {
+   if (esc->taulaBillar!=NULL)
        esc->taulaBillar->aplicaTGCentrat(transform);      
-
    if (esc->pla!=NULL)
        esc->pla->aplicaTGCentrat(transform);
+   if (esc->bola!=NULL)
+       esc->bola->aplicaTGCentrat(transform);
    esc->draw();
-   }
+
 }
 
 
@@ -255,6 +255,8 @@ void GLWidget::newObj(QString fichero)
 
 void GLWidget::newBola()
 {
+    Bola * obj=new Bola();
+    newObjecte(obj);
     // Metode que crea la Bola blanca de joc
      // Metode a implementar
 }
@@ -262,6 +264,8 @@ void GLWidget::newConjuntBoles()
 {
     // Metode que crea les 15 Boles del billar america
     // Metode a implementar
+    Bola * obj=new Bola();
+    newObjecte(obj);
 
 }
 void GLWidget::newSalaBillar()

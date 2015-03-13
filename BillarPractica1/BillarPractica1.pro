@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     taulabillar.cpp \
     cara.cpp \
     readfile.cpp \
-    pla.cpp
+    pla.cpp \
+    bola.cpp
 
 HEADERS  += mainwindow.h \
     vec.h \
@@ -32,7 +33,8 @@ HEADERS  += mainwindow.h \
     taulabillar.h \
     cara.h \
     readfile.h \
-    pla.h
+    pla.h \
+    bola.h
 
 FORMS    += mainwindow.ui
 

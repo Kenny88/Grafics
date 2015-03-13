@@ -124,8 +124,8 @@ void Objecte::draw()
 
 
     glPolygonMode(GL_FRONT_AND_BACK,
-                  GL_LINE);
-    glDrawArrays( GL_TRIANGLES, 0, Index );
+                  polygonMode);
+    glDrawArrays( drawMode, 0, Index );
 
     // Abans nomes es feia: glDrawArrays( GL_TRIANGLES, 0, NumVerticesP );
 }
@@ -149,7 +149,7 @@ void Objecte::make()
         for(unsigned int j=0; j<cares[i].idxVertices.size(); j++)
         {
             points[Index] = vertexs[cares[i].idxVertices[j]];
-            colors[Index] = vec4(base_colors[1], 1.0);
+            colors[Index] = cares[i].color;
             Index++;
         }
     }

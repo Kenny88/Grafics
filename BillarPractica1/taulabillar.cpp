@@ -2,6 +2,8 @@
 
 TaulaBillar::TaulaBillar(QString n) : Objecte(NumVerticesF)
 {
+    drawMode=GL_TRIANGLES;
+    polygonMode=GL_LINE;
     nom = n;
     Index = 0;
     tam = 1;
