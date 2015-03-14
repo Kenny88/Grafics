@@ -1,8 +1,8 @@
 #include "bola.h"
 
-Bola::Bola():Objecte(10000)
+Bola::Bola():Objecte(20000)
 {
-    GLfloat s = 10;
+    GLfloat s = 1;
     xorig = 0;
     yorig = 0;
     zorig = 0;
@@ -17,10 +17,10 @@ Bola::Bola():Objecte(10000)
         vec4( -0.816497, -0.471405, -0.333333, s ),
         vec4( 0.816497, -0.471405, -0.333333, s )
     };
-    divide_triangle( v[0], v[1], v[2],3);
-    divide_triangle( v[3], v[2], v[1],3);
-    divide_triangle( v[0], v[3], v[1],3);
-    divide_triangle( v[0], v[2], v[3],3);
+    divide_triangle( v[0], v[1], v[2],4);
+    divide_triangle( v[3], v[2], v[1],4);
+    divide_triangle( v[0], v[3], v[1],4);
+    divide_triangle( v[0], v[2], v[3],4);
 
 }
 
@@ -74,6 +74,9 @@ void Bola::divide_triangle(const point4& a, const point4& b, const point4& c, in
          v1 = calculVectorUnitari(sum(a,b));
          v2 = calculVectorUnitari(sum(a,c));
          v3 = calculVectorUnitari(sum(b,c));
+//         v1 = normalize(a+b);
+//         v2 = normalize(a+c);
+//         v3 = normalize(b+c);
          divide_triangle(a ,v1, v2, n-1);
          divide_triangle(c ,v2, v3, n-1);
          divide_triangle(b ,v3, v1, n-1);
