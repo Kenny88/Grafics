@@ -10,7 +10,6 @@ QT       += widgets
 TARGET = BillarPractica1
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
         mainwindow.cpp \
     glwidget.cpp \
@@ -21,7 +20,8 @@ SOURCES += main.cpp\
     cara.cpp \
     readfile.cpp \
     pla.cpp \
-    bola.cpp
+    bola.cpp \
+    conjuntboles.cpp
 
 HEADERS  += mainwindow.h \
     vec.h \
@@ -34,7 +34,8 @@ HEADERS  += mainwindow.h \
     cara.h \
     readfile.h \
     pla.h \
-    bola.h
+    bola.h \
+    conjuntboles.h
 
 FORMS    += mainwindow.ui
 

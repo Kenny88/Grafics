@@ -9,6 +9,7 @@ Escena::Escena()
     taulaBillar = NULL;
     pla=NULL;
     bola=NULL;
+    boles15 = NULL;
 }
 
 Escena::~Escena()
@@ -17,6 +18,7 @@ Escena::~Escena()
    delete this->taulaBillar;
    delete this->pla;
    delete this->bola;
+   delete this->boles15;
 }
 
 void Escena::addObjecte(Objecte *obj) {
@@ -26,6 +28,12 @@ void Escena::addObjecte(Objecte *obj) {
         this->pla = (Pla*)obj;
     if (dynamic_cast<Bola*>(obj))
         this->bola = (Bola*)obj;
+
+}
+
+void Escena::addConjuntBoles(ConjuntBoles *obj)
+{
+    this->boles15 = (ConjuntBoles*)obj;
 }
 
 
@@ -44,6 +52,8 @@ void Escena::aplicaTG(mat4 m) {
         pla->aplicaTG(m);
     if (bola!=NULL)
         bola->aplicaTG(m);
+    if (boles15!=NULL)
+        boles15->aplicaTG(m);
 
 }
 
@@ -57,6 +67,8 @@ void Escena::aplicaTGCentrat(mat4 m) {
         pla->aplicaTGCentrat(m);
     if (bola!=NULL)
         bola->aplicaTGCentrat(m);
+    if (boles15!=NULL)
+        boles15->aplicaTGCentrat(m);
 
 }
 
@@ -70,6 +82,8 @@ void Escena::draw() {
         pla->draw();
     if (bola!=NULL)
         bola->draw();
+    if (boles15!=NULL)
+        boles15->draw();
 
 }
 

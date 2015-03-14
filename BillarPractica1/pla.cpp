@@ -1,11 +1,11 @@
 #include "pla.h"
 
-Pla::Pla() : Objecte(6)
+Pla::Pla() : Objecte(12)
 {
-    sizeX = 1.0f;
-    sizeZ = 1.0f;
+    sizeX = 20.0f;
+    sizeZ = 20.0f;
     xorig = 0;
-    yorig = -0.5;
+    yorig = -6.0;
     zorig = 0;
     drawMode = GL_TRIANGLES;
     polygonMode= GL_FILL;
@@ -31,18 +31,18 @@ void Pla::triangles()
     vertexs.push_back(point4( -sizeX, yorig, sizeZ, 1.0 ));
     vertexs.push_back(point4(  sizeX, yorig, sizeZ, 1.0 ));
     vertexs.push_back(point4(  sizeX, yorig, -sizeZ, 1.0 ));
-
+    color4 tempcolor=point4(0.5,0.5,0.5,1.0);
     Cara c = Cara(0,1,2);
-    c.color = point4(0.0,0.5,1.0,1.0);
+    c.color = tempcolor;
     cares.push_back(c);
     c = Cara(0,2,3);
-    c.color = point4(0.0,0.5,1.0,1.0);
+    c.color = tempcolor;
     cares.push_back(c);
     c = Cara(2,1,0);
-    c.color = point4(0.0,0.5,1.0,1.0);
+    c.color = tempcolor;
     cares.push_back(c);
     c = Cara(3,2,0);
-    c.color = point4(0.0,0.5,1.0,1.0);
+    c.color = tempcolor;
     cares.push_back(c);
     Objecte::make();
     capsa = calculCapsa3D();

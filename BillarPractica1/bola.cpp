@@ -1,26 +1,66 @@
 #include "bola.h"
-
-Bola::Bola():Objecte(20000)
+Bola::Bola():Objecte(20000) //inclous el numero de vertices
 {
-    GLfloat s = 1;
+    GLfloat s = 1; //Tamany bola, com mes gran el valor, mes petita es
+    int n = 4; //numero de divisions de la bola, com mes gran mes rodo, cal aumentar el numero de vertices si augmentes aixo
     xorig = 0;
-    yorig = 0;
+    yorig = 0.4;
     zorig = 0;
     points = new point4[10000];
     colors = new color4[10000];
     drawMode = GL_TRIANGLES;
     polygonMode= GL_FILL;
-    colorTemp=point4(1.0,0.5,1.0,1.0);
+    colorTemp=point4(1.0,1.0,1.0,1.0);
     point4 v[4] = {
         vec4( 0.0, 0.0, 1.0, s ),
         vec4( 0.0, 0.942809, -0.333333, s ),
         vec4( -0.816497, -0.471405, -0.333333, s ),
         vec4( 0.816497, -0.471405, -0.333333, s )
     };
-    divide_triangle( v[0], v[1], v[2],4);
-    divide_triangle( v[3], v[2], v[1],4);
-    divide_triangle( v[0], v[3], v[1],4);
-    divide_triangle( v[0], v[2], v[3],4);
+    divide_triangle( v[0], v[1], v[2],n);
+    divide_triangle( v[3], v[2], v[1],n);
+    divide_triangle( v[0], v[3], v[1],n);
+    divide_triangle( v[0], v[2], v[3],n);
+//
+    make();
+    aplicaTG(Translate(xorig,yorig,zorig));
+    double escalaZ = 1.0 / 20.0;
+    mat4 m = Scale(escalaZ, escalaZ, escalaZ);
+    aplicaTG(m);
+
+}
+
+Bola::Bola(int color, GLfloat xOrg, GLfloat yOrg, GLfloat zOrg):Objecte(20000) //inclous el numero de vertices
+{
+    colorsB[0]=point4(1.0,1.0,1.0,1.0);colorsB[1]=point4(1.0,0.0,0.0,1.0);colorsB[2]=point4(1.0,1.0,0.0,1.0)
+            ;colorsB[3]=point4(0.0,0.0,1.0,1.0);colorsB[4]=point4(0.0,1.0,1.0,1.0);colorsB[5]=point4(0.0,1.0,0.0,1.0)
+            ;colorsB[6]=point4(0.5,0.5,0.5,1.0);colorsB[7]=point4(1.0,0.5,1.0,1.0);colorsB[8]=point4(0.5,0.0,1.0,1.0)
+            ;colorsB[9]=point4(0.0,5.0,1.0,1.0);colorsB[10]=point4(0.0,0.0,0.5,1.0);colorsB[11]=point4(0.5,0.5,0.0,1.0)
+            ;colorsB[12]=point4(0.0,0.5,0.5,1.0);colorsB[13]=point4(0.5,0.0,0.5,1.0);colorsB[14]=point4(0.25,0.25,0.4,1.0)
+            ;colorsB[15]=point4(0.7,0.7,0.3,1.0);
+    GLfloat s = 1; //Tamany bola, com mes gran el valor, mes petita es
+    int n = 4; //numero de divisions de la bola, com mes gran mes rodo, cal aumentar el numero de vertices si augmentes aixo
+    xorig = xOrg;
+    yorig = yOrg;
+    zorig = zOrg;
+    points = new point4[10000];
+    colors = new color4[10000];
+    drawMode = GL_TRIANGLES;
+    polygonMode= GL_FILL;
+    colorTemp=colorsB[color];
+    point4 v[4] = {
+        vec4( 0.0, 0.0, 1.0, s ),
+        vec4( 0.0, 0.942809, -0.333333, s ),
+        vec4( -0.816497, -0.471405, -0.333333, s ),
+        vec4( 0.816497, -0.471405, -0.333333, s )
+    };
+    divide_triangle( v[0], v[1], v[2],n);
+    divide_triangle( v[3], v[2], v[1],n);
+    divide_triangle( v[0], v[3], v[1],n);
+    divide_triangle( v[0], v[2], v[3],n);
+    make();
+    aplicaTG(Translate(xOrg,yOrg,zOrg));
+//    make();
 
 }
 
@@ -82,7 +122,13 @@ void Bola::divide_triangle(const point4& a, const point4& b, const point4& c, in
          divide_triangle(b ,v3, v1, n-1);
          divide_triangle(v1 ,v3, v2, n-1);
       }
-      triangle(a, b, c);
+      vertexs.push_back(c);
+      vertexs.push_back(b);
+      vertexs.push_back(a);
+      Cara cara = Cara((vertexs.size()-3),(vertexs.size()-2),(vertexs.size()-1));
+      cara.color = colorTemp;
+      cares.push_back(cara);
+//      triangle(a, b, c);
 }
 Bola::~Bola()
 {

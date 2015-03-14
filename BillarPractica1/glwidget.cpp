@@ -96,7 +96,8 @@ void GLWidget::setXRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != xRot) {
-        xRot += (angle-xRot)/150;
+//        xRot += (angle-xRot)/150;
+        xRot +=1;
         update();
     }
 }
@@ -106,7 +107,8 @@ void GLWidget::setYRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != yRot) {
-        yRot += (angle-yRot)/150;;
+//        yRot += (angle-yRot)/150;
+        yRot +=1;
         update();
     }
 }
@@ -115,7 +117,8 @@ void GLWidget::setZRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != zRot) {
-        zRot += (angle-zRot)/150;;
+//        zRot += (angle-zRot)/150;
+        zRot +=1;
         update();
     }
 }
@@ -153,6 +156,8 @@ void GLWidget::paintGL()
        esc->pla->aplicaTGCentrat(transform);
    if (esc->bola!=NULL)
        esc->bola->aplicaTGCentrat(transform);
+   if (esc->boles15!=NULL)
+       esc->boles15->aplicaTGCentrat(transform);
    esc->draw();
 
 }
@@ -225,6 +230,9 @@ void GLWidget::keyReleaseEvent(QKeyEvent *event)
 void GLWidget::adaptaObjecteTamanyWidget(Objecte *obj)
 {
         // Metode a implementar
+    double escalaZ = 1.0 / 20.0;
+    mat4 m = Scale(escalaZ, escalaZ, escalaZ);
+    obj->aplicaTG(m);
 }
 
 void GLWidget::newObjecte(Objecte * obj)
@@ -264,13 +272,34 @@ void GLWidget::newConjuntBoles()
 {
     // Metode que crea les 15 Boles del billar america
     // Metode a implementar
-    Bola * obj=new Bola();
-    newObjecte(obj);
-
+    ConjuntBoles * obj=new ConjuntBoles();
+    for(int i=0; i<15;i++)
+    {
+        adaptaObjecteTamanyWidget(obj->boles[i]);
+        obj->boles[i]->toGPU(program);
+    }
+    esc->addConjuntBoles(obj);
+    updateGL();
 }
 void GLWidget::newSalaBillar()
 {
     // Metode que construeix tota la sala de billar: taula, 15 boles i bola blanca
+    ConjuntBoles * obj=new ConjuntBoles();
+    for(int i=0; i<15;i++)
+    {
+        adaptaObjecteTamanyWidget(obj->boles[i]);
+        obj->boles[i]->toGPU(program);
+    }
+    esc->addConjuntBoles(obj);
+    TaulaBillar *obj2;
+
+    obj2 = new TaulaBillar("../BillarPractica1/resources/taula.obj");
+    newObjecte(obj2);
+
+    Pla* obj3 = new Pla();
+    newObjecte(obj3);
+    Bola* obj4 = new Bola(0,0,10,-3);
+    newObjecte(obj4);
 }
 
 // Metode per iniciar la dinàmica del joc
