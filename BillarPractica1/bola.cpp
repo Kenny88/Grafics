@@ -130,6 +130,19 @@ void Bola::divide_triangle(const point4& a, const point4& b, const point4& c, in
       cares.push_back(cara);
 //      triangle(a, b, c);
 }
+
+float Bola::getRadi()
+{
+    float max=-99999999,min=99999999;
+    for(int i=0;i<Index;i++){
+        if(points[i][0]<min)
+            min=points[i][0];
+        if(points[i][0]>max)
+            max=points[i][0];
+    }
+    return (max-min)/2;
+}
+
 Bola::~Bola()
 {
 

@@ -10,6 +10,7 @@ public:
     Bola(int color, GLfloat xOrg, GLfloat yOrg, GLfloat zOrg);
     void triangle( const point4& a, const point4& b, const point4& c );
     ~Bola();
+    float getRadi();
 private:
     float radi;
     color4 colorTemp;
