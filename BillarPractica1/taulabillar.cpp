@@ -2,6 +2,7 @@
 
 TaulaBillar::TaulaBillar(QString n) : Objecte(NumVerticesF)
 {
+    path=QString("://resources/Fabric_Green_L.jpg");
     drawMode=GL_TRIANGLES;
     polygonMode=GL_FILL;
     nom = n;

@@ -99,8 +99,8 @@ void GLWidget::setXRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != xRot) {
-//        xRot += (angle-xRot)/150;
-        xRot +=1;
+        xRot += (angle-xRot)/150;
+//        xRot +=1;
         update();
     }
 }
@@ -110,8 +110,8 @@ void GLWidget::setYRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != yRot) {
-//        yRot += (angle-yRot)/150;
-        yRot +=1;
+        yRot += (angle-yRot)/150;
+//        yRot +=1;
         update();
     }
 }
@@ -120,8 +120,8 @@ void GLWidget::setZRotation(int angle)
 {
     qNormalizeAngle(angle);
     if (angle != zRot) {
-//        zRot += (angle-zRot)/150;
-        zRot +=1;
+        zRot += (angle-zRot)/150;
+//        zRot +=1;
         update();
     }
 }
@@ -193,10 +193,10 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     int dy = event->y() - lastPos.y();
 
     if (event->buttons() & Qt::LeftButton) {
-        setXRotation(xRot + 8 * dy);
+        setXRotation(xRot + 1 * dy);
     } else if (event->buttons() & Qt::RightButton) {
-        setXRotation(xRot + 8 * dy);
-        setZRotation(zRot + 8 * dx);
+        setXRotation(xRot + 1 * dy);
+        setZRotation(zRot + 1 * dx);
     }
     lastPos = event->pos();
 }
@@ -234,6 +234,7 @@ void GLWidget::adaptaObjecteTamanyWidget(Objecte *obj)
 {
         // Metode a implementar
     double escalaZ = 1.0 / 20.0;
+//    double escalaZ = 1.0;
     if(dynamic_cast<Bola*>(obj))
     {
         escalaZ=escalaZ/2;
@@ -250,6 +251,7 @@ void GLWidget::adaptaObjecteTamanyWidget(Objecte *obj)
 void GLWidget::newObjecte(Objecte * obj)
 {
     adaptaObjecteTamanyWidget(obj);
+    obj->initTextura(0);
     obj->toGPU(program);
     esc->addObjecte(obj);
 
@@ -276,7 +278,7 @@ void GLWidget::newObj(QString fichero)
 void GLWidget::newBola()
 {
     Bola * obj=new Bola(0,0,20,-24);
-    obj->initTextura(0);
+//    Bola * obj=new Bola(1,0,0,0);
     newObjecte(obj);
     // Metode que crea la Bola blanca de joc
      // Metode a implementar

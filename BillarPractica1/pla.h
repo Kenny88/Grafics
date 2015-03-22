@@ -10,6 +10,7 @@ public:
     Pla(GLfloat x0, GLfloat y0, GLfloat z0);
     void triangles();
     ~Pla();
+    void quad(int a, int b, int c, int d);
 private:
     static const int NumVerticesF = 4;
     float sizeX;
