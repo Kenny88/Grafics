@@ -11,7 +11,9 @@ public:
     void triangle( const point4& a, const point4& b, const point4& c );
     ~Bola();
     float getRadi();
+    void setTexture(const point4 &a);
 private:
+
     float radi;
     color4 colorTemp;
     color4 colorsB[16];

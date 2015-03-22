@@ -2,7 +2,7 @@
 
 ConjuntBoles::ConjuntBoles()
 {
-    float d=1.9, xOrg=-3.8, yOrg=10,zOrg=12;
+    float d=1.9, xOrg=-3.8, yOrg=20,zOrg=24;
     //fila 1
 
     for(int i=0;i<15;i++)
@@ -32,11 +32,11 @@ ConjuntBoles::ConjuntBoles()
 
 ConjuntBoles::~ConjuntBoles()
 {
-//    for(int i=0; i<15;i++)
-//    {
-//        delete &boles[i];
-//    }
-    delete boles;
+    for(int i=0; i<15;i++)
+    {
+        delete &boles[i];
+    }
+    delete &boles;
 }
 
 void ConjuntBoles::aplicaTG(mat4 m)

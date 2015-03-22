@@ -1,5 +1,6 @@
 #include <objecte.h>
 #include <readfile.h>
+#include <qmath.h>
 
 Objecte::Objecte(int npoints, QObject *parent) : numPoints(npoints) ,
     QObject(parent)
@@ -7,6 +8,8 @@ Objecte::Objecte(int npoints, QObject *parent) : numPoints(npoints) ,
     initializeGLFunctions();
     points = new point4[npoints];
     colors = new color4[npoints];
+    vertexsTextura = new vec2[npoints];
+
 }
 
 Objecte::Objecte(int npoints, QString n) : numPoints(npoints)
@@ -14,6 +17,7 @@ Objecte::Objecte(int npoints, QString n) : numPoints(npoints)
     initializeGLFunctions();
     points = new point4[npoints];
     colors = new color4[npoints];
+    vertexsTextura = new vec2[npoints];
     std::cout<<"Estic en el constructor parametritzat del objecte\n";
 
     xRot = 0;
@@ -34,6 +38,7 @@ Objecte::~Objecte()
 {
     delete points;
     delete colors;
+    delete vertexsTextura;
 }
 
 
@@ -85,20 +90,37 @@ void Objecte::aplicaTGCentrat(mat4 m)
     aplicaTG(m);
 }
 
+void Objecte::initTextura(int i)
+ {
+     qDebug() << "Initializing textures...";
+
+
+     // Carregar la textura
+     glActiveTexture(GL_TEXTURE0);
+     texture = new QOpenGLTexture(QImage(path));
+     texture->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
+     texture->setMagnificationFilter(QOpenGLTexture::Linear);
+
+     texture->bind(0);
+
+ }
+
 void Objecte::toGPU(QGLShaderProgram *pr){
 
     program = pr;
-
+    program->setUniformValue("texture", num);
     std::cout<<"Passo les dades de l'objecte a la GPU\n";
+
 
     glGenBuffers( 1, &buffer );
     glBindBuffer( GL_ARRAY_BUFFER, buffer );
-    glBufferData( GL_ARRAY_BUFFER, sizeof(point4) * Index + sizeof(color4) * Index,
+    glBufferData( GL_ARRAY_BUFFER, sizeof(point4) * Index + sizeof(color4) * Index+sizeof(vec2)* Index,
                   NULL, GL_STATIC_DRAW );
     program->link();
 
     program->bind();
     glEnable( GL_DEPTH_TEST );
+    glEnable(GL_TEXTURE_2D);
 }
 
 // Pintat en la GPU.
@@ -111,10 +133,13 @@ void Objecte::draw()
     // per si han canviat les coordenades dels punts
     glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(point4) * Index, &points[0] );
     glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4) * Index, sizeof(color4) * Index, &colors[0] );
+    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)* Index +sizeof(color4) * Index,
+                     sizeof(vec2)* Index, &vertexsTextura[0] );
 
     // Per a conservar el buffer
     int vertexLocation = program->attributeLocation("vPosition");
     int colorLocation = program->attributeLocation("vColor");
+    int coordTextureLocation = program->attributeLocation("vCoordTexture");
 
     program->enableAttributeArray(vertexLocation);
     program->setAttributeBuffer("vPosition", GL_FLOAT, 0, 4);
@@ -122,7 +147,15 @@ void Objecte::draw()
     program->enableAttributeArray(colorLocation);
     program->setAttributeBuffer("vColor", GL_FLOAT, sizeof(point4) * Index, 4);
 
+    program->enableAttributeArray(coordTextureLocation);
+    program->setAttributeBuffer("vCoordTexture", GL_FLOAT, sizeof(point4) * Index + sizeof(color4) * Index, 2);
 
+//    program->bindAttributeLocation("vPosition", vertexLocation);
+//    program->bindAttributeLocation("vColor", colorLocation);
+    //program->bindAttributeLocation("vCoordTexture", coordTextureLocation);
+
+    texture->bind(0);
+    program->setUniformValue("texture", 0);
     glPolygonMode(GL_FRONT_AND_BACK,
                   polygonMode);
     glDrawArrays( drawMode, 0, Index );
@@ -150,6 +183,7 @@ void Objecte::make()
         {
             points[Index] = vertexs[cares[i].idxVertices[j]];
             colors[Index] = cares[i].color;
+            setTexture(vertexs[cares[i].idxVertices[j]]);
             Index++;
         }
     }
@@ -282,6 +316,13 @@ void Objecte::construeix_cara ( char **words, int nwords, Objecte*objActual, int
     }
     face.color = vec4(1.0, 0.0, 0.0, 1.0);
     objActual->cares.push_back(face);
+}
+void Objecte::setTexture( point4 a)
+{
+    GLfloat u = 0.5 + qAtan2(a[2], a[0])/ (2*M_PI);
+    GLfloat v = 0.5 - qAsin(a[1])/M_PI;
+    vertexsTextura[Index]=vec2(u,v);
+
 }
 
 

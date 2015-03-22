@@ -10,6 +10,7 @@
 
 
 #include <QGLShaderProgram>
+#include <QOpenGLTexture>
 
 typedef Common::vec4  color4;
 typedef Common::vec4  point4;
@@ -20,6 +21,7 @@ class Objecte : public QObject, protected QGLFunctions
 {
     Q_OBJECT
 protected:
+    int num;
     QString nom; // nom del fitxer on esta el cotxe
     vector<Cara> cares; // cares de l'objecte
     vector<point4> vertexs; // vertexs de l'objecte sense repetits
@@ -41,9 +43,12 @@ protected:
     int     numPoints;
     point4 *points;
     color4 *colors;
+    vec2 *vertexsTextura;
     int Index; // index de control del numero de vertexs a posar a la GPU
     GLint drawMode;
     GLint polygonMode;
+    QString path;
+    QOpenGLTexture *texture;
 
 public:
 
@@ -77,6 +82,8 @@ public:
     // Aplica una TG centrada en el punt central de la capsa de l'objecte a un objecte
     void aplicaTGCentrat(mat4 m);
 
+    void initTextura(int i);
+    void setTexture(point4 a);
 private:
     void construeix_cara ( char **words, int nwords, Objecte*objActual, int vindexUlt);
 

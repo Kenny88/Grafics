@@ -2,6 +2,7 @@
 
 Pla::Pla() : Objecte(12)
 {
+    path=QString("://resources/Fabric_Green_L.jpg");
     sizeX = 20.0f;
     sizeZ = 20.0f;
     xorig = 0;
@@ -15,6 +16,7 @@ Pla::Pla() : Objecte(12)
 
 Pla::Pla(GLfloat x0, GLfloat y0, GLfloat z0) : Objecte(NumVerticesF)
 {
+    path=QString("://resources/Fabric_Green_L.jpg");
     sizeX = x0/2;
     sizeZ = z0/2;
     yorig = y0;

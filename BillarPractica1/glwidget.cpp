@@ -42,6 +42,7 @@ void
 GLWidget::InitShader(const char* vShaderFile, const char* fShaderFile)
 {           
 
+
     QGLShader *vshader = new QGLShader(QGLShader::Vertex, this);
     QGLShader *fshader = new QGLShader(QGLShader::Fragment, this);
 
@@ -55,11 +56,13 @@ GLWidget::InitShader(const char* vShaderFile, const char* fShaderFile)
 
     program->bindAttributeLocation("vPosition", PROGRAM_VERTEX_ATTRIBUTE);
     program->bindAttributeLocation("vColor", PROGRAM_COLOR_ATTRIBUTE);
+    program->bindAttributeLocation("vCoordTexture", 2);
     // muntatge del shader en el pipeline gràfic per a ser usat
     program->link();
 
     // unió del shader al pipeline gràfic
     program->bind();
+    program->setUniformValue("texture", 0);
 
 }
 
@@ -231,8 +234,17 @@ void GLWidget::adaptaObjecteTamanyWidget(Objecte *obj)
 {
         // Metode a implementar
     double escalaZ = 1.0 / 20.0;
-    mat4 m = Scale(escalaZ, escalaZ, escalaZ);
-    obj->aplicaTG(m);
+    if(dynamic_cast<Bola*>(obj))
+    {
+        escalaZ=escalaZ/2;
+        mat4 m = Scale(escalaZ, escalaZ, escalaZ);
+        obj->aplicaTG(m);
+    }
+    else{
+        mat4 m = Scale(escalaZ, escalaZ, escalaZ);
+        obj->aplicaTG(m);
+    }
+
 }
 
 void GLWidget::newObjecte(Objecte * obj)
@@ -263,7 +275,8 @@ void GLWidget::newObj(QString fichero)
 
 void GLWidget::newBola()
 {
-    Bola * obj=new Bola();
+    Bola * obj=new Bola(0,0,20,-24);
+    obj->initTextura(0);
     newObjecte(obj);
     // Metode que crea la Bola blanca de joc
      // Metode a implementar
@@ -276,7 +289,9 @@ void GLWidget::newConjuntBoles()
     for(int i=0; i<15;i++)
     {
         adaptaObjecteTamanyWidget(obj->boles[i]);
+        obj->boles[i]->initTextura(i);
         obj->boles[i]->toGPU(program);
+
     }
     float radi=obj->boles[0]->getRadi()*2, temp=0;
     int count=0;
@@ -284,7 +299,7 @@ void GLWidget::newConjuntBoles()
     {
         for(int g=0;g<5-j;g++)
         {
-            obj->boles[count]->aplicaTG(Translate(radi*(g+temp),0,radi*j));
+            obj->boles[count]->aplicaTG(Translate(radi*(g+temp),0,-radi*j));
             count++;
         }
         temp+=0.5;
@@ -316,13 +331,7 @@ void GLWidget::newConjuntBoles()
 void GLWidget::newSalaBillar()
 {
     // Metode que construeix tota la sala de billar: taula, 15 boles i bola blanca
-    ConjuntBoles * obj=new ConjuntBoles();
-    for(int i=0; i<15;i++)
-    {
-        adaptaObjecteTamanyWidget(obj->boles[i]);
-        obj->boles[i]->toGPU(program);
-    }
-    esc->addConjuntBoles(obj);
+    newConjuntBoles();
     TaulaBillar *obj2;
 
     obj2 = new TaulaBillar("../BillarPractica1/resources/taula.obj");
@@ -330,8 +339,7 @@ void GLWidget::newSalaBillar()
 
     Pla* obj3 = new Pla();
     newObjecte(obj3);
-    Bola* obj4 = new Bola(0,0,10,-3);
-    newObjecte(obj4);
+    newBola();
 }
 
 // Metode per iniciar la dinàmica del joc
