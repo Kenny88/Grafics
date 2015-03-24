@@ -3,6 +3,7 @@
 
 #include <glwidget.h>
 #include <QString>
+#include <qmath.h>
 
 
 GLWidget::GLWidget(QWidget *parent)
@@ -166,21 +167,36 @@ void GLWidget::paintGL()
 //       esc->taulaBillar->aplicaTGCentrat(transform);
 //   if (esc->pla!=NULL)
 //       esc->pla->aplicaTGCentrat(transform);
-   if (esc->bola!=NULL)
+   if (esc->bola!=NULL){
 //       esc->bola->aplicaTGCentrat(transform);
+       bool trans=true;
+       double x=esc->bola->capsa.pmin[0]-esc->bola->capsa.a;
+       double y=esc->bola->capsa.pmin[1]-esc->bola->capsa.h;
+       double z=esc->bola->capsa.pmin[2]-esc->bola->capsa.p;
+       double radi=esc->bola->getRadi();
+       double dist;
+
+       for(int i=0;i<15;i++){
+           double x1=esc->boles15->boles[i]->capsa.pmin[0]-esc->boles15->boles[i]->capsa.a;
+           double y1=esc->boles15->boles[i]->capsa.pmin[1]-esc->boles15->boles[i]->capsa.h;
+           double z1=esc->boles15->boles[i]->capsa.pmin[2]-esc->boles15->boles[i]->capsa.p;
+           dist=qSqrt(qPow(x-x1,2)+qPow(y-y1,2)+qPow(z-z1,2));
+           if()
+           esc->boles15->boles[i]->capsa.pmin;
+       }
        esc->bola->aplicaTGCentrat(mov);
+   }
 //   }
 //   if (esc->boles15!=NULL)
 //       esc->boles15->aplicaTGCentrat(transform);
    if(rot)
-   {
+   {      
        esc->aplicaTGCentrat(transform);
    }
    rot=false;
    esc->draw();
 
 }
-
 
 void GLWidget::resizeGL(int width, int height)
 {
