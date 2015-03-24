@@ -55,6 +55,10 @@ private:
     int xRot;
     int yRot;
     int zRot;
+    double movX;
+    double movZ;
+    bool rot;
+    mat4 mov;
     float  a, p, h;
 
     QColor clearColor;

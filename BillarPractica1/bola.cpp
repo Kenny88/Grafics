@@ -1,6 +1,6 @@
 #include "bola.h"
 #include <qmath.h>
-Bola::Bola():Objecte(20000) //inclous el numero de vertices
+Bola::Bola():Objecte(10000) //inclous el numero de vertices
 {
     num=0;
     GLfloat s = 1; //Tamany bola, com mes gran el valor, mes petita es

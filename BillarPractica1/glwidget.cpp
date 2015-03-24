@@ -15,7 +15,12 @@ GLWidget::GLWidget(QWidget *parent)
     xRot = 0;
     yRot = 0;
     zRot = 0;
+    rot=false;
 
+
+    movX=0;
+    movZ=0;
+    mov = Translate(movX,0,movZ);
     a = 20.0;
     h = 20.0;
     p = 20.0;
@@ -101,6 +106,7 @@ void GLWidget::setXRotation(int angle)
     if (angle != xRot) {
         xRot += (angle-xRot)/150;
 //        xRot +=1;
+        rot=true;
         update();
     }
 }
@@ -112,6 +118,7 @@ void GLWidget::setYRotation(int angle)
     if (angle != yRot) {
         yRot += (angle-yRot)/150;
 //        yRot +=1;
+        rot=true;
         update();
     }
 }
@@ -122,6 +129,7 @@ void GLWidget::setZRotation(int angle)
     if (angle != zRot) {
         zRot += (angle-zRot)/150;
 //        zRot +=1;
+        rot=true;
         update();
     }
 }
@@ -152,15 +160,23 @@ void GLWidget::paintGL()
                        RotateY( yRot / 16.0 ) *
                        RotateZ( zRot / 16.0 ) );
 
+
    // A modificar si cal girar tots els objectes
-   if (esc->taulaBillar!=NULL)
-       esc->taulaBillar->aplicaTGCentrat(transform);      
-   if (esc->pla!=NULL)
-       esc->pla->aplicaTGCentrat(transform);
+//   if (esc->taulaBillar!=NULL)
+//       esc->taulaBillar->aplicaTGCentrat(transform);
+//   if (esc->pla!=NULL)
+//       esc->pla->aplicaTGCentrat(transform);
    if (esc->bola!=NULL)
-       esc->bola->aplicaTGCentrat(transform);
-   if (esc->boles15!=NULL)
-       esc->boles15->aplicaTGCentrat(transform);
+//       esc->bola->aplicaTGCentrat(transform);
+       esc->bola->aplicaTGCentrat(mov);
+//   }
+//   if (esc->boles15!=NULL)
+//       esc->boles15->aplicaTGCentrat(transform);
+   if(rot)
+   {
+       esc->aplicaTGCentrat(transform);
+   }
+   rot=false;
    esc->draw();
 
 }
@@ -208,23 +224,27 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
     switch ( event->key() )
     {
     case Qt::Key_Up:
-
+        movZ=0.01;
         break;
     case Qt::Key_Down:
-
+        movZ=-0.01;
         break;
     case Qt::Key_Left:
-
+        movX=-0.01;
         break;
     case Qt::Key_Right:
-
+        movX=0.01;
         break;
     }
+    mov=Translate(movX,0,movZ);
+    update();
 }
 
 void GLWidget::keyReleaseEvent(QKeyEvent *event)
 {
     // Metode a implementar en el cas que es mogui la bola
+    movZ=0;;
+    movX=0;
 
 }
 

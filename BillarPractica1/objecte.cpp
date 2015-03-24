@@ -47,9 +47,25 @@ Capsa3D Objecte::calculCapsa3D()
 
     // Metode a implementar: calcula la capsa mínima contenidora d'un objecte
     int i;
+    //double xmin=999999, ymin=999999, zmin=999999, xmax=-999999, ymax=-999999, zmax=-999999;
     vec3    pmin, pmax;
+    pmin=(999999,999999,999999);
+    pmax=(-999999,-999999,-999999);
 
+    for(int i =0;i<Index;i++)
+    {
+        for(int j = 0;j<3;j++){
+            if(points[i][j]<pmin[j])
+                pmin[j]=points[i][j];
+            if(points[i][j]>pmax[j])
+                pmax[j]=points[i][j];
+        }
+    }
 
+    capsa.pmin=pmin;
+    capsa.a=pmax[0]-pmin[0];
+    capsa.h=pmax[1]-pmin[1];
+    capsa.p=pmax[2]-pmin[2];
     return capsa;
 }
 
@@ -101,14 +117,14 @@ void Objecte::initTextura(int i)
      texture->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
      texture->setMagnificationFilter(QOpenGLTexture::Linear);
 
-     texture->bind(0);
+     //texture->bind(0);
 
  }
 
 void Objecte::toGPU(QGLShaderProgram *pr){
 
     program = pr;
-    program->setUniformValue("texture", num);
+    program->setUniformValue("texture", 0);
     std::cout<<"Passo les dades de l'objecte a la GPU\n";
 
 
