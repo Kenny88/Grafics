@@ -181,7 +181,6 @@ void GLWidget::paintGL()
            double y1=esc->boles15->boles[i]->capsa.pmin[1]-esc->boles15->boles[i]->capsa.h;
            double z1=esc->boles15->boles[i]->capsa.pmin[2]-esc->boles15->boles[i]->capsa.p;
            dist=qSqrt(qPow(x-x1,2)+qPow(y-y1,2)+qPow(z-z1,2));
-           if()
            esc->boles15->boles[i]->capsa.pmin;
        }
        esc->bola->aplicaTGCentrat(mov);
