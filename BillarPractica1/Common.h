@@ -43,10 +43,9 @@
     # include  <GL/gl.h>
     # include  <GL/glext.h>
 #endif
-
 #ifdef unix
-    # include  <GL/gl.h>
-    # include  <GL/glext.h>
+# include  <GL/gl.h>
+# include  <GL/glext.h>
 #endif
 // Define a helpful macro for handling offsets into buffer objects
 #define BUFFER_OFFSET( offset )   ((GLvoid*) (offset))

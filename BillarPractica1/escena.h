@@ -18,6 +18,7 @@
 #include <pla.h>
 #include <bola.h>
 #include <conjuntboles.h>
+#include <camera.h>
 
 using namespace std;
 
@@ -31,11 +32,19 @@ public:
     void addConjuntBoles(ConjuntBoles *obj);
     void aplicaTG(mat4 m);
 
+    void iniCamera(bool camGeneral, int ampladaVewport, int alcadaViewport,QGLShaderProgram *program);
+    void setAnglesCamera(bool camGeneral, float angX, float angY, float angZ);
+    void setVRPCamera(bool camGeneral, point4 vrp);
+    void setDCamera(bool camGeneral, float d);
+    void setWindowCamera(bool camGeneral, bool retallat, Capsa2D window);
+
     void aplicaTGCentrat(mat4 m);
     void reset();
 
     void draw();
     void CapsaMinCont3DEscena();
+
+    void actualizarCamara();
 
     // Capsa contenedora de l'escena
     Capsa3D capsaMinima;
@@ -46,6 +55,7 @@ public:
     Pla *pla;
     Bola *bola;
     ConjuntBoles *boles15;
+    Camera *camera;
 };
 
 #endif // ESCENA_H

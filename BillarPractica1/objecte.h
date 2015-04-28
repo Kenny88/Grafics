@@ -41,10 +41,10 @@ protected:
 
     // Estructures de vertexs i colors per passar a la GPU
     int     numPoints;
-    point4 *points;
+
     color4 *colors;
     vec2 *vertexsTextura;
-    int Index; // index de control del numero de vertexs a posar a la GPU
+     // index de control del numero de vertexs a posar a la GPU
     GLint drawMode;
     GLint polygonMode;
     QString path;
@@ -54,7 +54,8 @@ public:
 
   // Capsa mínima contenidora de l'objecte
     Capsa3D capsa;
-
+    point4 *points;
+    int Index;
     //explicit Objecte(QObject *parent = 0);
     Objecte(const int npoints, QObject *parent = 0);
     Objecte(const int npoints, QString n);

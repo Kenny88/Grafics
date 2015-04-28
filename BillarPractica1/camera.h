@@ -6,7 +6,8 @@
 #include <stdio.h>
 #include <Common.h>
 #include <QGLShaderProgram>
-
+#include <QOpenGLTexture>
+#include <QGLFunctions>
 #define PI 3.14159
 
 #define MAXDPOST 100000
@@ -44,7 +45,7 @@ typedef struct
 /* =                                 = */
 /* =================================== */
 
-class Camera
+class Camera : protected QGLFunctions
 {
 public:
     explicit Camera();
@@ -75,23 +76,30 @@ public:
     void toGPU(QGLShaderProgram *program);
 
     void rotate(Capsa3D c);
-    void pan();
+    void pan(float x, float y);
     void zoom();
 
+    void rotarX(bool dir);
+    void rotarY(bool dir);
+    void zoom(bool sign);
 
     VisuSystem vs;      /* Sistema de visualitzacio  */
     PiramProj piram;    /* Piramide de visualitzacio */
     Capsa2D wd;	      /* Window                    */
     Capsa2D vp;       /* Viewport                  */
+    QGLShaderProgram *program;
 
 
 private:
     void VertexCapsa3D(Capsa3D capsaMinima, vec4 vaux[8]);
 
+    Capsa3D capsaMinima;
     mat4  modView; // Matriu model-view de la CPU
     mat4  proj;  // Matriu projection de la CPU
     GLuint  model_view;  // model-view matrix uniform shader variable (GPU)
     GLuint  projection;  // projection matrix uniform shader variable (GPU)
+    float zoomValue, panX, panY;
+    bool alt;
 };
 
 

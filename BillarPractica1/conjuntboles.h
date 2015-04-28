@@ -16,6 +16,7 @@ public:
     void draw();
     void CapsaMinCont3DEscena();
     Bola* boles[15];
+    int Index;
 
 };
 

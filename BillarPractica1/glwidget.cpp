@@ -17,6 +17,7 @@ GLWidget::GLWidget(QWidget *parent)
     yRot = 0;
     zRot = 0;
     rot=false;
+    alt=false;
 
 
     movX=0;
@@ -32,6 +33,7 @@ GLWidget::GLWidget(QWidget *parent)
 
     program = 0;
     moviment = false;
+    cameraActual=true;
 
 }
 
@@ -146,6 +148,9 @@ void GLWidget::initializeGL()
 
     glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), clearColor.alphaF());
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    newSalaBillar();
+    //esc->CapsaMinCont3DEscena();
+    esc->iniCamera(cameraActual,this->size().width(), this->size().height(),program);
 
 }
 
@@ -194,6 +199,8 @@ void GLWidget::paintGL()
    }
    rot=false;
    esc->draw();
+   esc->actualizarCamara();
+   esc->camera->toGPU(program);
 
 }
 
@@ -224,10 +231,40 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     int dy = event->y() - lastPos.y();
 
     if (event->buttons() & Qt::LeftButton) {
-        setXRotation(xRot + 1 * dy);
-    } else if (event->buttons() & Qt::RightButton) {
-        setXRotation(xRot + 1 * dy);
-        setZRotation(zRot + 1 * dx);
+//        setXRotation(xRot + 1 * dy);
+        if(lastPos.y()!=event->y() && lastPos.x()!=event->x()){
+            if(abs(dx)<abs(dy)){
+                // Se mueve en el eje y
+                if(dy<0){
+                    esc->camera->rotarY(false);
+                }else{
+                    esc->camera->rotarY(true);
+                }
+            }else{
+                // Se mueve en el eje x
+                if(dx<0){
+                    esc->camera->rotarX(false);
+                }else{
+                    esc->camera->rotarX(true);
+                }
+            }
+            update();
+        }else if(lastPos.y()!=event->y()){
+            if(dy<0){
+                esc->camera->rotarY(false);
+            }else{
+                esc->camera->rotarY(true);
+            }
+            update();
+        }else if(lastPos.x()!=event->x()){
+            // Se mueve en el eje x
+            if(dx<0){
+                esc->camera->rotarX(false);
+            }else{
+                esc->camera->rotarX(true);
+            }
+            update();
+        }
     }
     lastPos = event->pos();
 }
@@ -239,27 +276,61 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
     switch ( event->key() )
     {
     case Qt::Key_Up:
-        movZ=0.01;
+        movZ=0.03;
         break;
     case Qt::Key_Down:
-        movZ=-0.01;
+        movZ=-0.03;
         break;
     case Qt::Key_Left:
-        movX=-0.01;
+        movX=-0.03;
         break;
     case Qt::Key_Right:
-        movX=0.01;
+        movX=0.03;
+        break;   
+    case Qt::Key_Plus:
+        esc->camera->zoom(true);
+        break;
+    case Qt::Key_Minus:
+        esc->camera->zoom(false);
+        break;
+    case Qt::Key_Alt:
+        alt=true;
         break;
     }
-    mov=Translate(movX,0,movZ);
+    if(alt)
+    {
+        esc->camera->pan(movX,movZ);
+        mov=Translate(0,0,0);
+    }
+    else{
+        mov=Translate(movX,0,movZ);
+    }
     update();
 }
 
 void GLWidget::keyReleaseEvent(QKeyEvent *event)
 {
     // Metode a implementar en el cas que es mogui la bola
-    movZ=0;;
-    movX=0;
+    switch ( event->key() )
+    {
+    case Qt::Key_Up:
+        movZ=0;
+        break;
+    case Qt::Key_Down:
+        movZ=0;
+        break;
+    case Qt::Key_Left:
+        movX=0;
+        break;
+    case Qt::Key_Right:
+        movX=0;
+        break;
+
+    case Qt::Key_Alt:
+        alt=false;
+        break;
+    }
+    mov=Translate(movX,0,movZ);
 
 }
 
@@ -268,8 +339,8 @@ void GLWidget::keyReleaseEvent(QKeyEvent *event)
 void GLWidget::adaptaObjecteTamanyWidget(Objecte *obj)
 {
         // Metode a implementar
-    double escalaZ = 1.0 / 20.0;
-//    double escalaZ = 1.0;
+//    double escalaZ = 1.0 / 20.0;
+    double escalaZ = 1.0;
     if(dynamic_cast<Bola*>(obj))
     {
         escalaZ=escalaZ/2;
@@ -312,7 +383,7 @@ void GLWidget::newObj(QString fichero)
 
 void GLWidget::newBola()
 {
-    Bola * obj=new Bola(0,0,20,-24);
+    Bola * obj=new Bola(0,0,22,-24);
 //    Bola * obj=new Bola(1,0,0,0);
     newObjecte(obj);
     // Metode que crea la Bola blanca de joc
@@ -341,27 +412,7 @@ void GLWidget::newConjuntBoles()
         }
         temp+=0.5;
     }
-//    float d=1.9, xOrg=-3.8, yOrg=10,zOrg=12;
-    //fila 1
-//    boles[0]=new Bola(1,xOrg,yOrg,zOrg);
-//    boles[1]=new Bola(2,xOrg+d,yOrg,zOrg);
-//    boles[2]=new Bola(3,xOrg+d*2,yOrg,zOrg);
-//    boles[3]=new Bola(4,xOrg+d*3,yOrg,zOrg);
-//    boles[4]=new Bola(5,xOrg+d*4,yOrg,zOrg);
-//    //fila 2
-//    boles[5]=new Bola(6,xOrg+d/2,yOrg,zOrg-d);
-//    boles[6]=new Bola(7,xOrg+3*d/2,yOrg,zOrg-d);
-//    boles[7]=new Bola(8,xOrg+5*d/2,yOrg,zOrg-d);
-//    boles[8]=new Bola(9,xOrg+7*d/2,yOrg,zOrg-d);
-//    //flia 3
-//    boles[9]=new Bola(10,xOrg+d,yOrg,zOrg-d*2);
-//    boles[10]=new Bola(11,xOrg+d*2,yOrg,zOrg-d*2);
-//    boles[11]=new Bola(12,xOrg+d*3,yOrg,zOrg-d*2);
-//    //flia 4
-//    boles[12]=new Bola(13,xOrg+3*d/2,yOrg,zOrg-d*3);
-//    boles[13]=new Bola(14,xOrg+5*d/2,yOrg,zOrg-d*3);
-//    //fila 5
-//    boles[14]=new Bola(15,xOrg+d*2,yOrg,zOrg-d*4);
+    obj->CapsaMinCont3DEscena();
     esc->addConjuntBoles(obj);
     updateGL();
 }
@@ -374,8 +425,8 @@ void GLWidget::newSalaBillar()
     obj2 = new TaulaBillar("../BillarPractica1/resources/taula.obj");
     newObjecte(obj2);
 
-    Pla* obj3 = new Pla();
-    newObjecte(obj3);
+    //Pla* obj3 = new Pla();
+    //newObjecte(obj3);
     newBola();
 }
 

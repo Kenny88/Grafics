@@ -2,8 +2,9 @@
 
 ConjuntBoles::ConjuntBoles()
 {
-    float d=1.9, xOrg=-3.8, yOrg=20,zOrg=24;
+    float d=1.9, xOrg=-3.8, yOrg=22,zOrg=24;
     //fila 1
+    Index = 0;
 
     for(int i=0;i<15;i++)
     {
@@ -34,7 +35,7 @@ ConjuntBoles::~ConjuntBoles()
 {
     for(int i=0; i<15;i++)
     {
-        delete &boles[i];
+        delete boles[i];
     }
     delete &boles;
 }
@@ -66,9 +67,11 @@ void ConjuntBoles::draw()
     }
 }
 
-
 void ConjuntBoles::CapsaMinCont3DEscena()
 {
+    for(int i=0; i<15;i++)
+    {
+        Index+=boles[i]->Index;
+    }
 
 }
-

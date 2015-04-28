@@ -26,9 +26,9 @@ Bola::Bola():Objecte(10000) //inclous el numero de vertices
 //
     make();
     aplicaTG(Translate(xorig,yorig,zorig));
-    double escalaZ = 1.0 / 20.0;
-    mat4 m = Scale(escalaZ, escalaZ, escalaZ);
-    aplicaTG(m);
+//    double escalaZ = 1.0 / 20.0;
+//    mat4 m = Scale(escalaZ, escalaZ, escalaZ);
+//    aplicaTG(m);
 
 }
 

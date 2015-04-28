@@ -2,11 +2,12 @@
 
 Camera::Camera()
 {
-    vs.vrp = vec4(0.0, 0.0, 0.0, 1.0);
-    vs.vup = vec4(0.0, 1.0, 0.0, 0.0);
-    vs.obs = vec4(0.0, 0.0, 200.0, 1.0);
 
-    vs.angx = 0;
+    vs.vrp = vec4(0.0, 0.0, 0.0, 1.0);
+    vs.vup = vec4(0.0, 0.0, 1.0, 0.0);
+    vs.obs = vec4(10.0, 20.0, 10.0, 1.0);
+
+    vs.angx = -90;
     vs.angy = 0;
     vs.angz = 0;
 
@@ -16,7 +17,12 @@ Camera::Camera()
     vp.pmin[1] = 0;
 
     piram.proj = PARALLELA;
-    piram.d = 100;
+    piram.d = 20;
+    piram.dant =0.1;
+    piram.dpost=100;
+    zoomValue=1;
+    panX=0;
+    panY=0;
 }
 
 void Camera::ini(int a, int h, Capsa3D capsaMinima)
@@ -24,16 +30,18 @@ void Camera::ini(int a, int h, Capsa3D capsaMinima)
     // Calcul del vrp com el centre de la capsa minima contenedora 3D
     // CAL IMPLEMENTAR
     // CODI A MODIFICAR DURANT LA PRACTICA 2
+    this->capsaMinima=capsaMinima;
+    vs.vrp[0] = capsaMinima.a/2.0+capsaMinima.pmin[0];
+    vs.vrp[1] = capsaMinima.h/2.0+capsaMinima.pmin[1];
+    vs.vrp[2] = capsaMinima.p/2.0+capsaMinima.pmin[2];
     
-    vs.vrp[0] = 0.0;
-    vs.vrp[1] = 0.0;
-    vs.vrp[2] = 0.0;
-    
-   
+
     vp.a = a;
     vp.h = h;
-    vp.pmin[0] = 0;
-    vp.pmin[1] = 0;
+    vp.pmin[0] = capsaMinima.pmin[0];
+    vp.pmin[1] = capsaMinima.pmin[1];
+    //vs.vup=CalculVup(90,90,90);
+    initializeGLFunctions();
     
 }
 
@@ -42,9 +50,50 @@ void Camera::ini(int a, int h, Capsa3D capsaMinima)
 void Camera::toGPU(QGLShaderProgram *program)
 {
     // CODI A MODIFICAR DURANT LA PRACTICA 2
+    setModelViewToGPU(program, modView);
+    setProjectionToGPU(program, proj);
 }
 
+void Camera::pan(float x, float y)
+{
+    if(x>0) panX=panX+0.05;
+    else if(x<0) panX=panX-0.05;
 
+    if(y>0) panY=panY+0.05;
+    else if(y<0) panY=panY-0.05;
+}
+
+void Camera::rotarX(bool dir)
+{
+    if (dir){
+        //rotar x positivas
+        vs.angx=vs.angx+5;
+    }else{
+        //rotar x negativas
+        vs.angx=vs.angx-5;
+    }
+}
+void Camera::rotarY(bool dir)
+{
+    if (dir){
+        //rotar y positivas
+        vs.angy=vs.angy+5;
+    }else{
+        //rotar y negativas
+        vs.angy=vs.angy-5;
+    }
+}
+
+void Camera::zoom(bool sign)
+{
+    if(!sign){
+        zoomValue=zoomValue+0.05;
+    }
+    else{
+        zoomValue=zoomValue-0.05;
+    }
+
+}
 
 
 // Suposa que les dades d'obs, vrp i vup son correctes en la camera
@@ -52,13 +101,22 @@ void Camera::toGPU(QGLShaderProgram *program)
 void Camera::CalculaMatriuModelView()
 {
     // CODI A MODIFICAR DURANT LA PRACTICA 2
-    modView = identity();
+    vs.obs = CalculObs (vs.vrp, piram.d, vs.angx, vs.angy);
+    CalculWindow(capsaMinima);
 }
 
 void Camera::CalculaMatriuProjection()
 {
     // CODI A MODIFICAR DURANT LA PRACTICA 2
-    proj = identity();
+//    proj = identity();
+    if (piram.proj == PARALLELA){
+        //std::cout << "Calculo la Matriz Projection de la camera ORTHOGRAPHIC/PARALLELA  |__|" << std::endl;
+        proj = Ortho(wd.pmin.x-wd.pmin.x*(1-zoomValue)+panX, (wd.pmin.x+panX + wd.a)*zoomValue, wd.pmin.y-wd.pmin.y*(1-zoomValue)+panY, (wd.pmin.y+panY + wd.h)*zoomValue, piram.dant, piram.dpost);
+    }else
+    {
+        //std::cout << "Calculo la Matriz Projection de la camera PERSPECTIVE/FRUSTUM \\.//" << std::endl;
+        proj = Frustum(wd.pmin.x-wd.pmin.x*(1-zoomValue)+panX, (wd.pmin.x+panX + wd.a)*zoomValue, wd.pmin.y-wd.pmin.y*(1-zoomValue)+panY, (wd.pmin.y+panY + wd.h)*zoomValue, piram.dant, piram.dpost);
+    }
 
 }
 
@@ -67,11 +125,30 @@ void Camera::CalculWindow( Capsa3D c)
 {
    // CODI A MODIFICAR DURANT LA PRACTICA 2
     
-    wd.pmin.x = -1;
-    wd.pmin.y = -1;
-    
-    wd.a = 2;
-    wd.h = 2;
+    vec4  vaux[8], vaux2[8];
+    vec4 vup = vec4(0.0, 1.0, 0.0, 0.0);
+    mat4  MDP; //matriz de proyeccion
+    int i;
+
+    modView = LookAt(vs.obs, vs.vrp, vup);
+
+//    if (piram.proj==PERSPECTIVA) {
+//        CreaMatDp(MDP);
+//        modView = MDP*modView;
+//    }
+
+     /* Passo els 8 vertexs de la capsa per MVIS */
+    VertexCapsa3D(c, vaux);
+
+   for(i=0; i<8; i++) {
+        vaux2[i]= modView*vaux[i];
+    }
+    wd = CapsaMinCont2DXYVert(vaux2, 8);
+
+    //std::cout << "camera > CalculWindow() "<<  modView  << std::endl;
+    AmpliaWindow(0.2);      /* marges del 20%  */
+    AjustaAspectRatioWd();
+
     
     
 }
@@ -88,13 +165,17 @@ void Camera::setModelViewToGPU(QGLShaderProgram *program, mat4 m)
 {
 
    // CODI A MODIFICAR DURANT LA PRACTICA 2
-
+    modView=m;
+    model_view = program->uniformLocation("model_view");
+    glUniformMatrix4fv( model_view, 1, GL_TRUE, modView );
 }
 
 void Camera::setProjectionToGPU(QGLShaderProgram *program, mat4 p)
 {
- 
-       // CODI A MODIFICAR DURANT LA PRACTICA 2
+    // CODI A MODIFICAR DURANT LA PRACTICA 2
+    proj=p;
+    projection = program->uniformLocation("projection");
+    glUniformMatrix4fv( projection, 1, GL_TRUE, proj);
 }
 
 void  Camera::AmpliaWindow(double r)

@@ -57,7 +57,7 @@ private:
     int zRot;
     double movX;
     double movZ;
-    bool rot;
+    bool rot,alt;
     mat4 mov;
     float  a, p, h;
 
@@ -67,6 +67,7 @@ private:
     QColor qtPurple;
 
     bool moviment;
+    bool cameraActual;
 
     // Programa de la GPU
     QGLShaderProgram *program;
