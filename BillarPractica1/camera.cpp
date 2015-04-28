@@ -56,8 +56,8 @@ void Camera::toGPU(QGLShaderProgram *program)
 
 void Camera::pan(float x, float y)
 {
-    if(x>0) panX=panX+0.05;
-    else if(x<0) panX=panX-0.05;
+    if(x>0) panX=panX-0.05;
+    else if(x<0) panX=panX+0.05;
 
     if(y>0) panY=panY+0.05;
     else if(y<0) panY=panY-0.05;
