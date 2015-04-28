@@ -125,28 +125,21 @@ void Camera::CalculWindow( Capsa3D c)
 {
    // CODI A MODIFICAR DURANT LA PRACTICA 2
     
-    vec4  vaux[8], vaux2[8];
-    vec4 vup = vec4(0.0, 1.0, 0.0, 0.0);
-    mat4  MDP; //matriz de proyeccion
     int i;
+    vec4  vec[8], vec2[8];
+    vec4 vup = vec4(0.0, 1.0, 0.0, 0.0);
 
-    modView = LookAt(vs.obs, vs.vrp, vup);
 
-//    if (piram.proj==PERSPECTIVA) {
-//        CreaMatDp(MDP);
-//        modView = MDP*modView;
-//    }
+    modView = LookAt(vs.obs, vs.vrp, vs.vup);
 
-     /* Passo els 8 vertexs de la capsa per MVIS */
-    VertexCapsa3D(c, vaux);
+    VertexCapsa3D(c, vec);
 
    for(i=0; i<8; i++) {
-        vaux2[i]= modView*vaux[i];
+        vec2[i]= modView*vec[i];
     }
-    wd = CapsaMinCont2DXYVert(vaux2, 8);
+    wd = CapsaMinCont2DXYVert(vec2, 8);
 
-    //std::cout << "camera > CalculWindow() "<<  modView  << std::endl;
-    AmpliaWindow(0.2);      /* marges del 20%  */
+    AmpliaWindow(0.15);
     AjustaAspectRatioWd();
 
     
