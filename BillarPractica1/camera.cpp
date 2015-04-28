@@ -127,8 +127,6 @@ void Camera::CalculWindow( Capsa3D c)
     
     int i;
     vec4  vec[8], vec2[8];
-    vec4 vup = vec4(0.0, 1.0, 0.0, 0.0);
-
 
     modView = LookAt(vs.obs, vs.vrp, vs.vup);
 
@@ -173,7 +171,6 @@ void Camera::setProjectionToGPU(QGLShaderProgram *program, mat4 p)
 
 void  Camera::AmpliaWindow(double r)
 {
-  // Pre r = 1.5 => amplia a 150%
   double na, da;
 
   na  = wd.a * (1.0 + r);
