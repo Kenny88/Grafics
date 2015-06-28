@@ -149,7 +149,9 @@ void GLWidget::initializeGL()
     glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), clearColor.alphaF());
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     newSalaBillar();
-    //esc->CapsaMinCont3DEscena();
+
+    // Se inicializan las dos cámaras (Corrección P2)
+    esc->iniCameraPrespectiva(false, this->size().width(), this->size().height(), program);
     esc->iniCamera(cameraActual,this->size().width(), this->size().height(),program);
 
 }
@@ -190,17 +192,24 @@ void GLWidget::paintGL()
        }
        esc->bola->aplicaTGCentrat(mov);
    }
+   esc->actualitzarBola();
 //   }
 //   if (esc->boles15!=NULL)
 //       esc->boles15->aplicaTGCentrat(transform);
-   if(rot)
-   {      
-       esc->aplicaTGCentrat(transform);
-   }
-   rot=false;
+   esc->setAmbientToGPU(program);
+//   if(rot)
+//   {
+//       esc->aplicaTGCentrat(transform);
+//   }
+//   rot=false;
    esc->draw();
    esc->actualizarCamara();
-   esc->camera->toGPU(program);
+   if (cameraActual){
+    esc->camera2->toGPU(program);
+   }
+   else{
+       esc->camera->toGPU(program);
+   }
 
 }
 
@@ -296,7 +305,14 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Alt:
         alt=true;
         break;
+    case Qt::Key_B:
+        cameraActual=false;
+        break;
+    case Qt::Key_T:
+        cameraActual=true;
+        break;
     }
+
     if(alt)
     {
         esc->camera->pan(movX,movZ);
@@ -420,13 +436,13 @@ void GLWidget::newSalaBillar()
 {
     // Metode que construeix tota la sala de billar: taula, 15 boles i bola blanca
     newConjuntBoles();
-    TaulaBillar *obj2;
+//    TaulaBillar *obj2;
 
-    obj2 = new TaulaBillar("../BillarPractica1/resources/taula.obj");
-    newObjecte(obj2);
+//    obj2 = new TaulaBillar("../BillarPractica1/resources/taula.obj");
+//    newObjecte(obj2);
 
-    //Pla* obj3 = new Pla();
-    //newObjecte(obj3);
+    Pla* obj3 = new Pla();
+    newObjecte(obj3);
     newBola();
 }
 

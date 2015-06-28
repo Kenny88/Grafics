@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     pla.cpp \
     bola.cpp \
     conjuntboles.cpp \
-    camera.cpp
+    camera.cpp \
+    llum.cpp \
+    material.cpp
 
 HEADERS  += mainwindow.h \
     vec.h \
@@ -37,7 +39,9 @@ HEADERS  += mainwindow.h \
     pla.h \
     bola.h \
     conjuntboles.h \
-    camera.h
+    camera.h \
+    llum.h \
+    material.h
 
 FORMS    += mainwindow.ui
 

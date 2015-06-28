@@ -57,6 +57,7 @@ private:
     int zRot;
     double movX;
     double movZ;
+    GLfloat yRotBola;   // Parametro para rotar la bola con las flechas
     bool rot,alt;
     mat4 mov;
     float  a, p, h;

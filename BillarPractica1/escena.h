@@ -19,6 +19,7 @@
 #include <bola.h>
 #include <conjuntboles.h>
 #include <camera.h>
+#include <llum.h>
 
 using namespace std;
 
@@ -37,6 +38,7 @@ public:
     void setVRPCamera(bool camGeneral, point4 vrp);
     void setDCamera(bool camGeneral, float d);
     void setWindowCamera(bool camGeneral, bool retallat, Capsa2D window);
+    void setAmbientToGPU(QGLShaderProgram *program);
 
     void aplicaTGCentrat(mat4 m);
     void reset();
@@ -56,6 +58,11 @@ public:
     Bola *bola;
     ConjuntBoles *boles15;
     Camera *camera;
+    Camera *camera2;
+    Llum *llum;
+    vec4 posBola;
+    void iniCameraPrespectiva(bool camGeneralBool, int ampladaViewport, int alcadaViewport, QGLShaderProgram *p);
+    void actualitzarBola();
 };
 
 #endif // ESCENA_H

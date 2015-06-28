@@ -12,6 +12,11 @@ Bola::Bola():Objecte(10000) //inclous el numero de vertices
     colors = new color4[10000];
     drawMode = GL_TRIANGLES;
     polygonMode= GL_FILL;
+    material = new Material();
+    material->intensity.ambient = vec3(0.24725,	0.1995,	0.0745);
+    material->intensity.diffuse = vec3(0.75164,	0.60648,	0.22648);
+    material->intensity.specular = vec3(0.628281,	0.555802,	0.366065);
+    material->intensity.shininess = 0.4*128;
     colorTemp=point4(1.0,1.0,1.0,1.0);
     point4 v[4] = {
         vec4( 0.0, 0.0, 1.0, s ),
@@ -53,6 +58,11 @@ Bola::Bola(int color, GLfloat xOrg, GLfloat yOrg, GLfloat zOrg):Objecte(10000) /
     drawMode = GL_TRIANGLES;
     polygonMode= GL_FILL;
     colorTemp=colorsB[0];
+    material = new Material();
+    material->intensity.ambient = vec3(0.24725,	0.1995,	0.0745);
+    material->intensity.diffuse = vec3(0.75164,	0.60648,	0.22648);
+    material->intensity.specular = vec3(0.628281,	0.555802,	0.366065);
+    material->intensity.shininess = 0.4*128;
     point4 v[4] = {
         vec4( 0.0, 0.0, 1.0, s ),
         vec4( 0.0, 0.942809, -0.333333, s ),
@@ -92,17 +102,21 @@ point4 Bola::calculVectorUnitari(const point4& p)
 void Bola::triangle( const point4& a, const point4& b, const point4& c )
 {
 
+    vec3 normal = normalize( cross(b - a, c - b) );
     points[Index] = c;
     colors[Index]=colorTemp;
     setTexture(c);
+    normals[Index]=normal;
     Index++;
     points[Index] = b;
     colors[Index]=colorTemp;
     setTexture(b);
+    normals[Index]=normal;
     Index++;
     points[Index] = a;
     colors[Index]=colorTemp;
     setTexture(a);
+    normals[Index]=normal;
     Index++;
 }
 void Bola::setTexture(const point4& a)

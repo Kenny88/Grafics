@@ -7,7 +7,7 @@ Camera::Camera()
     vs.vup = vec4(0.0, 0.0, 1.0, 0.0);
     vs.obs = vec4(10.0, 20.0, 10.0, 1.0);
 
-    vs.angx = -90;
+    vs.angx = 90;
     vs.angy = 0;
     vs.angz = 0;
 
@@ -23,6 +23,7 @@ Camera::Camera()
     zoomValue=1;
     panX=0;
     panY=0;
+
 }
 
 void Camera::ini(int a, int h, Capsa3D capsaMinima)
@@ -42,6 +43,7 @@ void Camera::ini(int a, int h, Capsa3D capsaMinima)
     vp.pmin[1] = capsaMinima.pmin[1];
     //vs.vup=CalculVup(90,90,90);
     initializeGLFunctions();
+
     
 }
 

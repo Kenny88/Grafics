@@ -7,7 +7,8 @@ Objecte::Objecte(int npoints, QObject *parent) : numPoints(npoints) ,
 {
     initializeGLFunctions();
     points = new point4[npoints];
-    colors = new color4[npoints];
+    //colors = new color4[npoints];
+    normals = new vec4[npoints];
     vertexsTextura = new vec2[npoints];
 
 }
@@ -16,7 +17,8 @@ Objecte::Objecte(int npoints, QString n) : numPoints(npoints)
 {
     initializeGLFunctions();
     points = new point4[npoints];
-    colors = new color4[npoints];
+//    colors = new color4[npoints];
+    normals = new vec4[npoints];
     vertexsTextura = new vec2[npoints];
     std::cout<<"Estic en el constructor parametritzat del objecte\n";
 
@@ -124,7 +126,9 @@ void Objecte::initTextura(int i)
 void Objecte::toGPU(QGLShaderProgram *pr){
 
     program = pr;
+
     program->setUniformValue("texture", 0);
+
     std::cout<<"Passo les dades de l'objecte a la GPU\n";
 
 
@@ -142,26 +146,27 @@ void Objecte::toGPU(QGLShaderProgram *pr){
 // Pintat en la GPU.
 void Objecte::draw()
 {
+    material->toGPU(program);
 
     // cal activar el buffer de l'objecte. Potser que ja n'hi hagi un altre actiu
     glBindBuffer( GL_ARRAY_BUFFER, buffer );
 
     // per si han canviat les coordenades dels punts
     glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(point4) * Index, &points[0] );
-    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4) * Index, sizeof(color4) * Index, &colors[0] );
+    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4) * Index, sizeof(normals) * Index, &normals[0] );
     glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)* Index +sizeof(color4) * Index,
                      sizeof(vec2)* Index, &vertexsTextura[0] );
 
     // Per a conservar el buffer
     int vertexLocation = program->attributeLocation("vPosition");
-    int colorLocation = program->attributeLocation("vColor");
+    int colorLocation = program->attributeLocation("vNormal");
     int coordTextureLocation = program->attributeLocation("vCoordTexture");
 
     program->enableAttributeArray(vertexLocation);
     program->setAttributeBuffer("vPosition", GL_FLOAT, 0, 4);
 
     program->enableAttributeArray(colorLocation);
-    program->setAttributeBuffer("vColor", GL_FLOAT, sizeof(point4) * Index, 4);
+    program->setAttributeBuffer("vNormal", GL_FLOAT, sizeof(point4) * Index, 4);
 
     program->enableAttributeArray(coordTextureLocation);
     program->setAttributeBuffer("vCoordTexture", GL_FLOAT, sizeof(point4) * Index + sizeof(color4) * Index, 2);

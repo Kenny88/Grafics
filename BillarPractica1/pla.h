@@ -11,6 +11,7 @@ public:
     void triangles();
     ~Pla();
     void quad(int a, int b, int c, int d);
+    point4 normal(point4 point);
 private:
     static const int NumVerticesF = 4;
     float sizeX;

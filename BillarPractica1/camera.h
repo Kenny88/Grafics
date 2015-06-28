@@ -88,12 +88,13 @@ public:
     Capsa2D wd;	      /* Window                    */
     Capsa2D vp;       /* Viewport                  */
     QGLShaderProgram *program;
+    Capsa3D capsaMinima;
 
 
 private:
     void VertexCapsa3D(Capsa3D capsaMinima, vec4 vaux[8]);
 
-    Capsa3D capsaMinima;
+
     mat4  modView; // Matriu model-view de la CPU
     mat4  proj;  // Matriu projection de la CPU
     GLuint  model_view;  // model-view matrix uniform shader variable (GPU)

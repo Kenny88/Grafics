@@ -7,13 +7,14 @@
 #include <QGLFunctions>
 #include <Common.h>
 #include <cara.h>
-
+#include <material.h>
 
 #include <QGLShaderProgram>
 #include <QOpenGLTexture>
 
 typedef Common::vec4  color4;
 typedef Common::vec4  point4;
+
 
 using namespace std;
 
@@ -49,12 +50,14 @@ protected:
     GLint polygonMode;
     QString path;
     QOpenGLTexture *texture;
+    Material *material;
 
 public:
 
   // Capsa mínima contenidora de l'objecte
     Capsa3D capsa;
     point4 *points;
+    point4 *normals;
     int Index;
     //explicit Objecte(QObject *parent = 0);
     Objecte(const int npoints, QObject *parent = 0);
