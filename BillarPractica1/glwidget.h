@@ -29,6 +29,9 @@ public:
     void setYRotation(int angle);
     void setZRotation(int angle);
 
+    vector<QGLShaderProgram *> shaders;
+    QHash<int, QGLShaderProgram *> Hash;
+
 public slots:
     void newPlaBase();
     void newObj(QString fichero);
